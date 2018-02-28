@@ -30,7 +30,7 @@ class tableObject:
       
 ##Table Parsing Function, outputs tableObject
 #Function which takes in the raw meta data and parses into a table.
-#Recursivele calls itself to build sub-tables.
+#Recursively calls itself to build sub-tables.
 
 def buildTable(currentPos, ruleData):
    tick = 0; # offset counter.
