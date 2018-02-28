@@ -1,0 +1,110 @@
+1           // STORE META QTY
+CondAct     // STORE META NAME
+5           // STORE META COLUMN QTY
+CType       // STORE META COLUMN NAME 1
+AType       // STORE META COLUMN NAME 2
+CData       // STORE META COLUMN NAME 3
+AData       // STORE META COLUMN NAME 4
+State       // STORE META COLUMN NAME 5
+n           // STORE META COLUMN INDEXED 1
+n           // STORE META COLUMN INDEXED 2
+n           // STORE META COLUMN INDEXED 3
+n           // STORE META COLUMN INDEXED 4
+n           // STORE META COLUMN INDEXED 5
+7           // STORE META RULE QTY
+i           // STORE META RULE 1 COL 1 DATATYPE 
+6           // STORE META RULE 1 COL 1 DATAVALUE
+i           // STORE META RULE 1 COL 2 DATATYPE
+2           // STORE META RULE 1 COL 2 DATAVALUE
+i           // STORE META RULE 1 COL 3 DATATYPE
+5           // STORE META RULE 1 COL 3 DATAVALUE
+s           // STORE META RULE 1 COL 4 DATATYPE
+/t CharacterOne, !check         // STORE META RULE 1 COL 4 DATAVALUE
+s           // STORE META RULE 1 COL 5 DATATYPE
+CheckLeader         // STORE META RULE 1 COL 5 DATAVALUE
+i           // STORE META RULE 2 COL 1 DATATYPE
+4           // STORE META RULE 2 COL 1 DATAVALUE
+i           // STORE META RULE 2 COL 2 DATATYPE
+2           // STORE META RULE 2 COL 2 DATAVALUE
+s           // STORE META RULE 2 COL 3 DATATYPE
+^.*(CharacterOne).* (say|says|tells you), \"!check\"$  // STORE META RULE 2 COL 3 DATAVALUE
+s           // STORE META RULE 2 COL 4 DATATYPE
+/t CharacterTwo, !check // STORE META RULE 2 COL 4 DATAVALUE
+s           // STORE META RULE 2 COL 5 DATATYPE
+CheckLeader         // STORE META RULE 2 COL 5 DATAVALUE
+i           // STORE META RULE 3 COL 1 DATATYPE
+4           // STORE META RULE 3 COL 1 DATAVALUE
+i           // STORE META RULE 3 COL 2 DATATYPE
+2           // STORE META RULE 3 COL 2 DATAVALUE
+s           // STORE META RULE 3 COL 3 DATATYPE
+^.*(CharacterTwo).* (say|says|tells you), \"!check\"$  // STORE META RULE 3 COL 3 DATAVALUE
+s           // STORE META RULE 3 COL 4 DATATYPE 
+/t CharacterThree, !check   // STORE META RULE 3 COL 4 DATAVALUE
+s           // STORE META RULE 3 COL 5 DATATYPE
+CheckLeader         // STORE META RULE 3 COL 5 DATAVALUE
+i           // STORE META RULE 4 COL 1 DATATYPE
+4           // STORE META RULE 4 COL 1 DATAVALUE
+i           // STORE META RULE 4 COL 2 DATATYPE
+3           // STORE META RULE 4 COL 2 DATAVALUE
+s           // STORE META RULE 4 COL 3 DATATYPE
+^.*(CharacterThree).* (say|says|tells you), \"!check\"$    // STORE META RULE 4 COL 3 DATAVALUE
+TABLE            // STORE META RULE 4 COL 4 DATATYPE (SHIFT TO SUB TABLE PARSER)
+2           // STORE META RULE 4 COL 4 TABLE COLUMNQTY
+K           // STORE META RULE 4 COL 4 TABLE COLUMN NAME 1
+V           // STORE META RULE 4 COL 4 TABLE COLUMN NAME 2
+n           // STORE META RULE 4 COL 4 TABLE COLUMN INDEXED 1
+n           // STORE META RULE 4 COL 4 TABLE COLUMN INDEXED 2
+2           // STORE META RULE 4 COL 4 TABLE ROW QTY
+i           // STORE META RULE 4 COL 4 TABLE ROW 1 COL 1 DATATYPE
+2           // STORE META RULE 4 COL 4 TABLE ROW 1 COL 1 DATAVALUE
+s           // STORE META RULE 4 COL 4 TABLE ROW 1 COL 2 DATATYPE
+/f !dead            // STORE META RULE 4 COL 4 TABLE ROW 1 COL 2 DATAVALUE
+i           // STORE META RULE 4 COL 4 TABLE ROW 2 COL 1 DATATYPE
+1           // STORE META RULE 4 COL 4 TABLE ROW 2 COL 1 DATAVALUE
+s           // STORE META RULE 4 COL 4 TABLE ROW 2 COL 2 DATATYPE
+dead           // STORE META RULE 4 COL 4 TABLE ROW 2 COL 2 DATAVALUE
+s           // STORE META RULE 4 COL 5 DATATYPE
+CheckLeader           // STORE META RULE 4 COL 5 DATAVALUE
+i
+6
+i
+1
+i
+10
+s
+CheckLeader
+s
+CheckLeader
+i
+4
+i
+3
+s
+^.*(Leader).* (say|says|tells you), \"!check\"$ 
+TABLE
+2
+K
+V
+n
+n
+2
+i
+2
+s
+/r !check
+i
+1
+s
+Default
+s
+Default
+i
+4
+i
+1
+s
+^.*(Leader).* (say|says|tells you), \"!dead\"$ 
+s
+dead
+s
+Default
