@@ -68,32 +68,45 @@ def buildTable(currentPos, ruleData):
                   #print('RETURN')
                else:
                   newTable.rows[i].colEntries[j].dataValue = ruleData[currentPos + tick];
-                  #print([i,j,k,currentPos,tick,newTable.rows[i].colEntries[j].dataValue])
-                  tick = tick+1;
+                  print([i,j,k,currentPos,tick,newTable.rows[i].colEntries[j].dataValue])
+                  tick = tick + 1;
             newTable.rows[i].colEntries[j].data = [newTable.rows[i].colEntries[j].dataType, newTable.rows[i].colEntries[j].dataValue]
    #print([currentPos,tick])
    return (newTable, currentPos + tick)
 
 
-def tableReader(metaTable,outFile):
+def tableReader(metaTable,outFile,spcqty):
+   spc = ''
+   for i in range(spcqty):
+      spc = '  ' + spc
    outFile.write(str(metaTable.columnQty) + '\n')
+   print(spc + 'COLQTY = ' + str(metaTable.columnQty))
    for i in range(metaTable.columnQty):
       outFile.write(metaTable.columnNames[i] + '\n')
+      print(spc + 'COL_' + str(i) + '_NAME = '+  metaTable.columnNames[i])
    for i in range(metaTable.columnQty):
       outFile.write(metaTable.columnIndexed[i] + '\n')
+      print(spc + 'IDX_' + str(i) + '_IDX = ' + metaTable.columnIndexed[i])
    outFile.write(str(metaTable.rowQty) + '\n')
+   print(spc + 'ROWQTY = ' + str(metaTable.rowQty))
    for i in range(metaTable.rowQty):
+      print(spc + 'ROW# : ' + str(i) + '===========================================')
       for j in range(metaTable.columnQty):
+         print(spc + str([i,j])+ '---------------------------------------------')
+         print(spc + 'COL : ' + metaTable.columnNames[j])
          outFile.write(metaTable.rows[i].colEntries[j].dataType + '\n')
+         print(spc + 'DTYPE = ' + metaTable.rows[i].colEntries[j].dataType)
          if (metaTable.rows[i].colEntries[j].dataType == 'TABLE'):
-            tableReader(metaTable.rows[i].colEntries[j].dataValue,outFile)
-            #print('RETURN')
+            spcqty = spcqty + 1;
+            tableReader(metaTable.rows[i].colEntries[j].dataValue,outFile,spcqty)
+            spcqty = spcqty - 1;
          else:
             outFile.write(str(metaTable.rows[i].colEntries[j].dataValue) + '\n')
+            print(spc + 'DVAL = ' + str(metaTable.rows[i].colEntries[j].dataValue))
 
 
 ##Create File Object and open file
-inputFileObject = open('FULL_CATALOG (2).met', 'r');
+inputFileObject = open('Yanman Gambling Meta.met', 'r');
 ##Read File Object to string
 fileText = inputFileObject.read();
 ##Close File Object
@@ -113,5 +126,5 @@ outputFileObject = open('outFile.met', 'w+')
 
 outputFileObject.write(tableQty + '\n')
 outputFileObject.write(tableName + '\n')
-tableReader(myTable,outputFileObject)
+tableReader(myTable,outputFileObject,0);
 outputFileObject.close();
