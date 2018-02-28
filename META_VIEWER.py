@@ -5,14 +5,12 @@ Created on Thu Feb 22 20:26 2018
 @author: Ryan
 """
 ##IMPORTS
-import tkinter
-from tkinter import ttk
-
 ##Container for a single data unit (dataType string and dataValue, Value can be Table...)
 class colEntry:
    def __init__(self):
       self.dataType = 'i';
       self.dataValue = 0;
+      self.data = [self.dataType,self.dataValue]
 
 ##Container for a single rule (Row in metaTable)
 class rowObject:
@@ -71,10 +69,29 @@ def buildTable(currentPos, ruleData):
                else:
                   newTable.rows[i].colEntries[j].dataValue = ruleData[currentPos + tick];
                   #print([i,j,k,currentPos,tick,newTable.rows[i].colEntries[j].dataValue])
-                  tick = tick+1;   
+                  tick = tick+1;
+            newTable.rows[i].colEntries[j].data = [newTable.rows[i].colEntries[j].dataType, newTable.rows[i].colEntries[j].dataValue]
    #print([currentPos,tick])
    return (newTable, currentPos + tick)
-         
+
+
+def tableReader(metaTable,outFile):
+   outFile.write(str(metaTable.columnQty) + '\n')
+   for i in range(metaTable.columnQty):
+      outFile.write(metaTable.columnNames[i] + '\n')
+   for i in range(metaTable.columnQty):
+      outFile.write(metaTable.columnIndexed[i] + '\n')
+   outFile.write(str(metaTable.rowQty) + '\n')
+   for i in range(metaTable.rowQty):
+      for j in range(metaTable.columnQty):
+         outFile.write(metaTable.rows[i].colEntries[j].dataType + '\n')
+         if (metaTable.rows[i].colEntries[j].dataType == 'TABLE'):
+            tableReader(metaTable.rows[i].colEntries[j].dataValue,outFile)
+            #print('RETURN')
+         else:
+            outFile.write(str(metaTable.rows[i].colEntries[j].dataValue) + '\n')
+
+
 ##Create File Object and open file
 inputFileObject = open('FULL_CATALOG (2).met', 'r');
 ##Read File Object to string
@@ -91,6 +108,10 @@ ruleQty = fileLines[13];#Changes, 0 to inf.
 ruleData = fileLines[2:];#Changes, at least 10x ruleQty in line count.`
 
 [myTable,lineQty] = buildTable(0,ruleData);
-for i in range(int(ruleQty)):
-   for j in range(int(tableColumnQty)):
-      print([myTable.rows[i].colEntries[j].dataType,myTable.rows[i].colEntries[j].dataValue])
+
+outputFileObject = open('outFile.met', 'w+')
+
+outputFileObject.write(tableQty + '\n')
+outputFileObject.write(tableName + '\n')
+tableReader(myTable,outputFileObject)
+outputFileObject.close();
