@@ -5,6 +5,13 @@ Created on Thu Feb 22 20:26 2018
 @author: Ryan
 """
 ##IMPORTS
+import tkinter
+from tkinter import *
+from tkinter import ttk
+
+
+
+
 ##Container for a single data unit (dataType string and dataValue, Value can be Table...)
 class colEntry:
    def __init__(self):
@@ -195,6 +202,7 @@ outputFileObject.write(tableName + '\n')
 tableReader(myTable,outputFileObject,0);
 outputFileObject.close();
 
+
 listOfStates = list();
 countOfStateRules = list();
 for row in myTable.rows[:]:
@@ -224,3 +232,22 @@ for stateNum in range(len(listOfStates)):
             ezROW.append(ezCOL);
          print('  ' + str(ezROW))
    
+   
+## GUI VIEW
+master = tkinter.Tk()
+
+scrollbar = Scrollbar(master)
+scrollbar.pack(side=RIGHT, fill=Y)
+
+listbox = Listbox(master, yscrollcommand=scrollbar.set)
+for i in range(len(myTable.rows)):
+   for j in range(len(myTable.rows[i].colEntries)):
+      listbox.insert(END, Button(master, text=str(myTable.rows[i].colEntries[j].dataValue))
+      listbox.pack()
+      
+scrollbar.config(command=listbox.yview)
+master.mainloop()
+
+
+
+
