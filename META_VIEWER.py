@@ -5,7 +5,7 @@ Created on Thu Feb 22 20:26 2018
 @author: Ryan
 """
 # IMPORTS
-import tkinter
+# import tkinter
 # from tkinter import *
 # from tkinter import ttk
 
@@ -116,15 +116,17 @@ def buildNav(currentPos, ruleData):
     newNav.lineCount = 0
     navAsciiLength = 0
     tick = tick + 1
-    newNav.routeName = ruleData[currentPos + tick]
-    newNav.lineCount = newNav.lineCount + 1
-    navAsciiLength = navAsciiLength + len(newNav.routeName) + 2
-    tick = tick + 1
-    while navAsciiLength < newNav.blobLength:
-        newNav.listData.append(ruleData[currentPos + tick])
+    if newNav.blobLength > 0:
+        newNav.routeName = ruleData[currentPos + tick]
         newNav.lineCount = newNav.lineCount + 1
-        navAsciiLength = navAsciiLength + len(ruleData[currentPos + tick]) + 2
+        navAsciiLength = navAsciiLength + len(newNav.routeName) + 2
         tick = tick + 1
+        while navAsciiLength < newNav.blobLength:
+            newNav.listData.append(ruleData[currentPos + tick])
+            newNav.lineCount = newNav.lineCount + 1
+            navAsciiLength = navAsciiLength + len(
+                ruleData[currentPos + tick]) + 2
+            tick = tick + 1
     return (newNav, currentPos + tick)
 
 
@@ -211,7 +213,7 @@ def navStringifier(navObject):
     return(stringList)
 
 # Create File Object and open file
-inputFileObject = open('Yanman Gambling Meta.met', 'r')
+inputFileObject = open('NAMES.met', 'r')
 # Read File Object to string
 fileText = inputFileObject.read()
 # Close File Object
@@ -280,7 +282,8 @@ rootWindowLabel.pack()
 
 listFrameScrollbar = Scrollbar()
 
-listFrame = Frame(height=30 , width = 50, bd=3, relief=SUNKEN, yscrollcommand=listFrameScrollbar.set)
+listFrame = Frame(height=30 , width = 50,
+                  bd=3, relief=SUNKEN, yscrollcommand=listFrameScrollbar.set)
 
 
 listFrameLabel = Label(listFrame, text="Meta Rule list")
