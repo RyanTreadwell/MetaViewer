@@ -176,8 +176,6 @@ def navStringifier(navObject):
       stringList.append(navObject.listData[i])
    return(stringList)
 
-
-
 ##Create File Object and open file
 inputFileObject = open('Yanman Gambling Meta.met', 'r');
 ##Read File Object to string
@@ -234,20 +232,39 @@ for stateNum in range(len(listOfStates)):
    
    
 ## GUI VIEW
-master = tkinter.Tk()
+root = tkinter.Tk()
 
-scrollbar = Scrollbar(master)
-scrollbar.pack(side=RIGHT, fill=Y)
+rootWindowLabel = Label(root, text="Yanman's Meta Viewer")
+rootWindowLabel.pack()
 
-listbox = Listbox(master, yscrollcommand=scrollbar.set)
+listFrameScrollbar = Scrollbar()
+
+listFrame = Frame(height=30 , width = 50, bd=3, relief=SUNKEN, yscrollcommand=listFrameScrollbar.set)
+
+
+listFrameLabel = Label(listFrame, text="Meta Rule list")
+listFrameLabel.pack(side=TOP)
+listFrame.pack(side=LEFT, padx=5, pady=5, fill=BOTH, expand=YES)
+
+listbox1 = Listbox(listFrame)
 for i in range(len(myTable.rows)):
-   for j in range(len(myTable.rows[i].colEntries)):
-      listbox.insert(END, Button(master, text=str(myTable.rows[i].colEntries[j].dataValue))
-      listbox.pack()
-      
-scrollbar.config(command=listbox.yview)
-master.mainloop()
+   listbox1.insert(END, str(myTable.rows[i].colEntries[4].dataValue))
+listbox1.pack(side=LEFT, expand=YES, fill=BOTH)
+
+listbox2 = Listbox(listFrame)
+for i in range(len(myTable.rows)):
+   listbox2.insert(END, str(myTable.rows[i].colEntries[4].dataValue))
+listbox2.pack(side=LEFT, expand=YES, fill=BOTH)
 
 
+scrollbar.config(command=listFrame.yview)
+scrollbar.pack(side=LEFT, fill=Y) 
 
 
+detailFrame = Frame(height=30 , width = 50, bd=3, relief=SUNKEN)
+detailFrameLabel = Label(detailFrame, text="Rule detail")
+detailFrameLabel.pack(side=TOP)
+detailFrame.pack(side=LEFT, padx=5, pady=5, fill=BOTH, expand=YES)
+
+
+root.mainloop()
