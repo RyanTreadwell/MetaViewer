@@ -8,6 +8,7 @@ Created on Thu Feb 22 20:26 2018
 # import tkinter
 # from tkinter import *
 # from tkinter import ttk
+# import jsonpickle
 
 
 class colEntry:
@@ -188,6 +189,8 @@ def tableReader(metaTable, outFile, spcqty):
 
 def tableStringifier(tableObject):
     stringList = list()
+    for i in range(len(tableObject.columnNames)):
+        stringList.append(tableObject.columnNames[i])
     for i in range(len(tableObject.rows)):
         for j in range(len(tableObject.rows[i].colEntries)):
             entryList = list()
@@ -212,8 +215,42 @@ def navStringifier(navObject):
         stringList.append(navObject.listData[i])
     return(stringList)
 
+
+def conditionDecode(cndID):
+    cndSwitch = {0: "Never",
+                 1: "Always",
+                 2: "All",
+                 3: "Any",
+                 4: "Chat Message",
+                 5: "Pack Slots <=",
+                 6: "Seconds in state >=",
+                 7: "Navroute Empty",
+                 8: "Character Death",
+                 9: "Any Vendor Open",
+                 10: "Vendor Closed",
+                 11: "Inventory Item Count <=",
+                 12: "Inventory Item Count >=",
+                 13: "Monster Name Count Within Distance",
+                 14: "Monster Priority Count Within Distance",
+                 15: "Need to Buff",
+                 16: "No Monsters Within Distance",
+                 17: "Landblock ==",
+                 18: "Landcell ==",
+                 19: "Portalspace Entered",
+                 20: "Portalspace Exited",
+                 21: "Not",
+                 22: "Seconds in state (P) >=",
+                 23: "Time Left On Spell >=",
+                 24: "Burden Percent >=",
+                 25: "Dist any route pt >=",
+                 26: "Expression",
+                 28: "Chat Message Capture"
+                 }
+    return(cndSwitch[cndID])
+
+
 # Create File Object and open file
-inputFileObject = open('NAMES.met', 'r')
+inputFileObject = open('Yanman Gambling Meta.met', 'r')
 # Read File Object to string
 fileText = inputFileObject.read()
 # Close File Object
@@ -239,23 +276,44 @@ outputFileObject.close()
 
 listOfStates = list()
 countOfStateRules = list()
+conditionNameDecode = list()
+conditionDataDecode = list()
+conditionDefaultDecode = list()
+actionNameDecode = list()
+actionDataDecode = list()
+actionDefaultDecode = list()
+
 for row in myTable.rows[:]:
     if row.colEntries[4].dataValue in listOfStates:
         countOfStateRules[listOfStates.index(row.colEntries[4].dataValue)] = \
             countOfStateRules[
             listOfStates.index(row.colEntries[4].dataValue)] + 1
     else:
-        listOfStates.append(row.colEntries[4].dataValue)
         countOfStateRules.append(1)
+        conditionNameDecode.append(row.colEntries[0].dataValue)
+        actionNameDecode.append(row.colEntries[1].dataValue)
+        conditionDataDecode.append(row.colEntries[2].dataType)
+        conditionDefaultDecode.append(row.colEntries[2].dataValue)
+        actionDataDecode.append(row.colEntries[3].dataType)
+        actionDefaultDecode.append(row.colEntries[3].dataValue)
+        listOfStates.append(row.colEntries[4].dataValue)
+
 
 for stateNum in range(len(listOfStates)):
-    print('STATE NAME = ' + str(listOfStates[stateNum]) + ', RULE QTY = ' +
-          str(countOfStateRules[stateNum]))
+    print('STATE NAME = ' + str(listOfStates[stateNum]) +
+          ', RULE QTY = ' + str(countOfStateRules[stateNum]) +
+          ', CND NUM = ' + str(conditionNameDecode[stateNum]) +
+          ', ACT NUM = ' + str(actionNameDecode[stateNum]) +
+          ', CND DAT = ' + str(conditionDataDecode[stateNum]) +
+          ', CND DEF = ' + str(conditionDefaultDecode[stateNum]) +
+          ', ACT DAT = ' + str(actionDataDecode[stateNum]) +
+          ', ACT DEF = ' + str(actionDefaultDecode[stateNum]))
+
     stateRuleNo = 1
     for ruleNum in range(len(myTable.rows)):
         dVState = myTable.rows[ruleNum].colEntries[4].dataValue
         if dVState == listOfStates[stateNum]:
-            print('  ' + 'RULE # ' + str(stateRuleNo))
+            print('  ' + 'RULE # ' + str(ruleNum))
             stateRuleNo = stateRuleNo + 1
             ezROW = list()
             for colNum in range(len(myTable.rows[ruleNum].colEntries)):
@@ -264,6 +322,8 @@ for stateNum in range(len(listOfStates)):
                     str(myTable.rows[ruleNum].colEntries[colNum].dataType))
                 dT = myTable.rows[ruleNum].colEntries[colNum].dataType
                 dV = myTable.rows[ruleNum].colEntries[colNum].dataValue
+                if colNum == 0:
+                    dV = conditionDecode(int(dV))
                 if dT == 'TABLE':
                     ezCOL.append(tableStringifier(dV))
                 elif dT == 'ba':
@@ -272,6 +332,9 @@ for stateNum in range(len(listOfStates)):
                     ezCOL.append(str(dV))
                 ezROW.append(ezCOL)
             print('  ' + str(ezROW))
+
+# jsonOut = jsonpickle.encode(myTable, unpicklable=True)
+# print(jsonOut)
 
 """
 ## GUI VIEW
