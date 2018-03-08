@@ -76,10 +76,6 @@ for i in range(len(myTable.rows)):
    listbox2.insert(END, str(myTable.rows[i].colEntries[4].dataValue))
 listbox2.pack(side=LEFT, expand=YES, fill=BOTH)
 
-
-
-
-
 detailCanvas = Canvas(height=30 , width = 50, bd=3, relief=SUNKEN)
 detailCanvasLabel = Label(detailCanvas, text="Rule detail")
 detailCanvasLabel.pack(side=TOP)
