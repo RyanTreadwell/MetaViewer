@@ -188,6 +188,7 @@ def tableReader(metaTable, outFile, spcqty):
 
 
 def tableStringifier(tableObject):
+    # I Screwed this up trying to decode the action and condition names
     stringList = list()
     for i in range(len(tableObject.columnNames)):
         stringList.append(tableObject.columnNames[i])
@@ -202,7 +203,13 @@ def tableStringifier(tableObject):
                 entryList.append(navStringifier(
                     tableObject.rows[i].colEntries[j].dataValue))
             else:
-                entryList.append(tableObject.rows[i].colEntries[j].dataValue)
+                if tableObject.rows[i].colEntries[j].dataValue.colNames == ['K','V']:
+                    if j == 0:
+                        entryList.append(conditionDecode(tableObject.rows[i].colEntries[j].dataValue))
+                    elif j == 1:
+                        entryList.append(actionDecode(tableObject.rows[i].colEntries[j].dataValue))
+                else:
+                    entryList.append(tableObject.rows[i].colEntries[j].dataValue)
             stringList.append(entryList[:])
     return(stringList)
 
@@ -247,6 +254,26 @@ def conditionDecode(cndID):
                  28: "Chat Message Capture"
                  }
     return(cndSwitch[cndID])
+    
+def actionDecode(actID):
+    actSwitch = {0: "None",
+                 1: "Set Meta State",
+                 2: "Chat Command",
+                 3: "All",
+                 4: "Load Embedded Nav Route",
+                 5: "Call Meta State",
+                 6: "Return From Call",
+                 7: "Expression Action",
+                 8: "Chat Expression",
+                 9: "Set Watchdog",
+                 10: "Clear Watchdog",
+                 11: "Get VT Option",
+                 12: "Set VT Option",
+                 13: "Create View",
+                 14: "Destroy View",
+                 15: "Destroy All Views",
+                 }
+    return(actSwitch[actID])
 
 
 # Create File Object and open file
@@ -324,6 +351,8 @@ for stateNum in range(len(listOfStates)):
                 dV = myTable.rows[ruleNum].colEntries[colNum].dataValue
                 if colNum == 0:
                     dV = conditionDecode(int(dV))
+                if colNum == 1:
+                    dV = actionDecode(int(dV))
                 if dT == 'TABLE':
                     ezCOL.append(tableStringifier(dV))
                 elif dT == 'ba':
